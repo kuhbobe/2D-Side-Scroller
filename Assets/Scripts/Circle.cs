@@ -22,7 +22,7 @@ public class Circle : MonoBehaviour
 
         if(UnityEngine.Input.GetButtonDown("Jump"))
         {
-            rb.velocity = new Vector2(rb.velocity.x, 14f);
+            rb.velocity = new Vector2(rb.velocity.x, 10f);
         }
     }
 
