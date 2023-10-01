@@ -22,6 +22,7 @@ public class Scroller : MonoBehaviour
         collide.enabled = false;
 
         rb.velocity = new Vector2(scrollSpeed, 0);
+        ResetObstacle();
     }
 
     // Update is called once per frame
@@ -34,5 +35,7 @@ public class Scroller : MonoBehaviour
         }
     }
 
-    
+    void ResetObstacle(){
+        transform.GetChild(0).localPosition = new Vector3(0, Random.Range(-3,3), 0);
+    }
 }
