@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Windows;
+using UnityEngine.SceneManagement;
 
-public class Circle : MonoBehaviour
+public class Player : MonoBehaviour
 {
     Rigidbody2D rb;
 
@@ -24,12 +25,16 @@ public class Circle : MonoBehaviour
         {
             rb.velocity = new Vector2(rb.velocity.x, 10f);
         }
+
+        
     }
 
     void OnTriggerEnter2D(Collider2D other){
         if(other.gameObject.CompareTag("Obstacle")){
             Destroy(gameObject);
         }
+
+
     }
 
 }
