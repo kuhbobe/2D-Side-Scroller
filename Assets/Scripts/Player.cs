@@ -34,6 +34,7 @@ public class Player : MonoBehaviour
             Destroy(gameObject);
         }
 
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
 
     }
 
