@@ -20,12 +20,12 @@ public class Player : MonoBehaviour
     {
         float dirX = UnityEngine.Input.GetAxis("Horizontal");
         rb.velocity = new Vector2(dirX * 7f, rb.velocity.y);
-
-        if(UnityEngine.Input.GetButtonDown("Jump"))
-        {
-            rb.velocity = new Vector2(rb.velocity.x, 10f);
+        if(!PauseMenu.Paused){
+            if(UnityEngine.Input.GetButtonDown("Jump"))
+            {
+                rb.velocity = new Vector2(rb.velocity.x, 10f);
+            }
         }
-
         
     }
 
@@ -34,7 +34,7 @@ public class Player : MonoBehaviour
             Destroy(gameObject);
         }
 
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
+        SceneManager.LoadScene("Main Menu");
 
     }
 
