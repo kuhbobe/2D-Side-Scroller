@@ -7,6 +7,7 @@ public class MainMenu : MonoBehaviour
 {
   public void PlayGame(){
     SceneManager.LoadScene("Game_01");
+    PauseMenu.Paused = false;
 
   }
 
