@@ -8,6 +8,7 @@ using UnityEngine.SceneManagement;
 public class Player : MonoBehaviour
 {
     Rigidbody2D rb;
+    public AudioClip jumpSound;
 
     // Start is called before the first frame update
     void Start()
@@ -24,6 +25,7 @@ public class Player : MonoBehaviour
             if(UnityEngine.Input.GetButtonDown("Jump"))
             {
                 rb.velocity = new Vector2(rb.velocity.x, 10f);
+                GetComponent<AudioSource>().PlayOneShot(jumpSound);
             }
         }
         
