@@ -10,8 +10,6 @@ public class Scroller : MonoBehaviour
     private float width;
     private float scrollSpeed = -2f;
 
-
-
     // Start is called before the first frame update
     void Start()
     {
@@ -23,6 +21,8 @@ public class Scroller : MonoBehaviour
 
         rb.velocity = new Vector2(scrollSpeed, 0);
         ObstacleReset();
+        StartCoroutine(CoinReset());
+        
     }
 
     // Update is called once per frame
@@ -35,7 +35,20 @@ public class Scroller : MonoBehaviour
         }
     }
 
-    void ObstacleReset(){
-        transform.GetChild(0).localPosition = new Vector3(0, Random.Range(-3,3), 0);
+    void ObstacleReset()
+    {
+        transform.GetChild(0).localPosition = new Vector3(Random.Range(-3, 3), Random.Range(-3, 3), 0);
+    }
+
+    IEnumerator CoinReset()
+    {
+        // Delay for resetting the coin, you can set your desired time here.
+        yield return new WaitForSeconds(2f);
+
+        // Reset the coin's position
+        transform.GetChild(1).localPosition = new Vector3(Random.Range(-3, 3), Random.Range(-3, 3), 0);
+
+        // Show the coin
+        transform.GetChild(1).gameObject.SetActive(true);
     }
 }

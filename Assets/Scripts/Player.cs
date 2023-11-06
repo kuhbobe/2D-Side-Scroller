@@ -4,16 +4,25 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Windows;
 using UnityEngine.SceneManagement;
+using TMPro;
 
 public class Player : MonoBehaviour
 {
     Rigidbody2D rb;
     public AudioClip jumpSound;
-
+    public AudioClip hitSound;
+    public AudioClip coinSound;
+    public int score = 0;
+    public TMP_Text scoreText;
+    public TMP_Text livesText;
+    public int lives = 3;
     // Start is called before the first frame update
     void Start()
     {
        rb = GetComponent<Rigidbody2D>();
+       Debug.Log(LoadScore());
+       livesText.text = "Lives: " + lives.ToString();
+       
     }
 
     // Update is called once per frame
@@ -32,12 +41,44 @@ public class Player : MonoBehaviour
     }
 
     void OnTriggerEnter2D(Collider2D other){
+        
         if(other.gameObject.CompareTag("Obstacle")){
-            Destroy(gameObject);
+            GetComponent<AudioSource>().PlayOneShot(hitSound);
+            lives--;
+            Debug.Log(lives);
+            if (lives != 0){ 
+                livesText.text = "Lives: " + lives.ToString();
+            } else {
+                Destroy(gameObject);
+                SaveScore();
+                SceneManager.LoadScene("Main Menu");
+            }
+            
+        } else if (other.gameObject.CompareTag("Coin"))
+        {
+            
+            GetComponent<AudioSource>().PlayOneShot(coinSound);
+            IncreaseScore(); // Increment the score
+            Debug.Log("Score: " + score);
+            scoreText.text = "Current Score: " + score.ToString();
         }
 
-        SceneManager.LoadScene("Main Menu");
+    }
 
+    void IncreaseScore()
+    {
+        score++; // Increment the score
+        // You can also update the UI to display the current score here, if needed.
+    }
+
+    void SaveScore()
+    {
+        PlayerPrefs.SetInt("HighScore", score);
+        PlayerPrefs.Save();
+    }
+    int LoadScore()
+    {
+        return PlayerPrefs.GetInt("HighScore", 0);
     }
 
 }
