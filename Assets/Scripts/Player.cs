@@ -16,6 +16,8 @@ public class Player : MonoBehaviour
     public TMP_Text scoreText;
     public TMP_Text livesText;
     public int lives = 3;
+    public GameOverScreen gameOverScreen;
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -51,7 +53,7 @@ public class Player : MonoBehaviour
             } else {
                 Destroy(gameObject);
                 SaveScore();
-                SceneManager.LoadScene("Main Menu");
+                gameOverScreen.Setup(score);
             }
             
         } else if (other.gameObject.CompareTag("Coin"))
@@ -80,5 +82,7 @@ public class Player : MonoBehaviour
     {
         return PlayerPrefs.GetInt("HighScore", 0);
     }
+
+
 
 }
