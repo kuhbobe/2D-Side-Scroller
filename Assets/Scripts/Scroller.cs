@@ -6,9 +6,11 @@ public class Scroller : MonoBehaviour
 {
     public BoxCollider2D collide;
     public Rigidbody2D rb;
+    public GameObject Coin;
 
     private float width;
-    private float scrollSpeed = -2f;
+    private float scrollSpeed = -4f;
+    private float minimumDistanceThreshold = 3f;
 
     // Start is called before the first frame update
     void Start()
@@ -21,7 +23,7 @@ public class Scroller : MonoBehaviour
 
         rb.velocity = new Vector2(scrollSpeed, 0);
         ObstacleReset();
-        StartCoroutine(CoinReset());
+        CoinReset();
         
     }
 
@@ -32,23 +34,69 @@ public class Scroller : MonoBehaviour
         {
             Vector2 resetPosition = new Vector2(width * 2f, 0);
             transform.position = (Vector2)transform.position + resetPosition;
+            ObstacleReset();
+            CoinReset();
+        
         }
     }
 
     void ObstacleReset()
+{
+    // Get the obstacle's transform
+    Transform obstacleTransform = transform.GetChild(0);
+
+    // Set a flag to check if the positions overlap
+    bool positionsOverlap = true;
+
+    // Repeat until the positions do not overlap
+    while (positionsOverlap)
     {
-        transform.GetChild(0).localPosition = new Vector3(Random.Range(-3, 3), Random.Range(-3, 3), 0);
-    }
+        // Generate a new random position
+        Vector3 newPosition = new Vector3(Random.Range(-3, 3), Random.Range(-3, 3), 0);
 
-    IEnumerator CoinReset()
+        // Check the distance between the new position and coin's position
+        float distanceToCoin = Vector3.Distance(newPosition, transform.GetChild(1).localPosition);
+
+        // Check if the distance is greater than a certain threshold
+        if (distanceToCoin > minimumDistanceThreshold)
+        {
+            // If the distance is acceptable, set the new position and break out of the loop
+            obstacleTransform.localPosition = newPosition;
+            positionsOverlap = false;
+        }
+        // If the distance is not acceptable, repeat the loop to generate a new position
+    }
+}
+
+void CoinReset()
+{
+    // Get the coin's transform
+    Transform coinTransform = transform.GetChild(1);
+
+    // Set a flag to check if the positions overlap
+    bool positionsOverlap = true;
+
+    // Repeat until the positions do not overlap
+    while (positionsOverlap)
     {
-        // Delay for resetting the coin, you can set your desired time here.
-        yield return new WaitForSeconds(2f);
+        // Generate a new random position
+        Vector3 newPosition = new Vector3(Random.Range(-3, 3), Random.Range(-3, 3), 0);
 
-        // Reset the coin's position
-        transform.GetChild(1).localPosition = new Vector3(Random.Range(-3, 3), Random.Range(-3, 3), 0);
+        // Check the distance between the new position and obstacle's position
+        float distanceToObstacle = Vector3.Distance(newPosition, transform.GetChild(0).localPosition);
 
-        // Show the coin
-        transform.GetChild(1).gameObject.SetActive(true);
+        // Check if the distance is greater than a certain threshold
+        if (distanceToObstacle > minimumDistanceThreshold)
+        {
+            // If the distance is acceptable, set the new position and break out of the loop
+            coinTransform.localPosition = newPosition;
+
+            // Show the coin
+            Coin.SetActive(true);
+            positionsOverlap = false;
+        }
+        // If the distance is not acceptable, repeat the loop to generate a new position
     }
+}
+
 }

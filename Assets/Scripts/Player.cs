@@ -9,21 +9,30 @@ using TMPro;
 public class Player : MonoBehaviour
 {
     Rigidbody2D rb;
+    SpriteRenderer spriteRenderer;
     public AudioClip jumpSound;
     public AudioClip hitSound;
     public AudioClip coinSound;
     public int score = 0;
+    public float runSpeed = 40f;
+    float horizontalMove = 0f;
     public TMP_Text scoreText;
     public TMP_Text livesText;
     public int lives = 3;
     public GameOverScreen gameOverScreen;
+    public Animator animator;
+    public GameObject Coin;
+    public GameObject Coin2;
+    
     
     // Start is called before the first frame update
     void Start()
     {
        rb = GetComponent<Rigidbody2D>();
+       spriteRenderer = GetComponent<SpriteRenderer>();
+       spriteRenderer.flipX = false;
        Debug.Log(LoadScore());
-       livesText.text = "Lives: " + lives.ToString();
+       livesText.text = lives.ToString() + " x";
        
     }
 
@@ -32,6 +41,16 @@ public class Player : MonoBehaviour
     {
         float dirX = UnityEngine.Input.GetAxis("Horizontal");
         rb.velocity = new Vector2(dirX * 7f, rb.velocity.y);
+        horizontalMove = UnityEngine.Input.GetAxisRaw("Horizontal") * runSpeed;
+        animator.SetFloat("Speed", Mathf.Abs(horizontalMove));
+        if (rb.velocity.x > 0){
+            spriteRenderer.flipX = true;
+        } else {
+            spriteRenderer.flipX = false;
+        }
+
+        
+
         if(!PauseMenu.Paused){
             if(UnityEngine.Input.GetButtonDown("Jump"))
             {
@@ -49,11 +68,11 @@ public class Player : MonoBehaviour
             lives--;
             Debug.Log(lives);
             if (lives != 0){ 
-                livesText.text = "Lives: " + lives.ToString();
+                livesText.text = lives.ToString() + " x";
             } else {
                 Destroy(gameObject);
-                SaveScore();
                 gameOverScreen.Setup(score);
+                SaveScore();
             }
             
         } else if (other.gameObject.CompareTag("Coin"))
@@ -62,7 +81,9 @@ public class Player : MonoBehaviour
             GetComponent<AudioSource>().PlayOneShot(coinSound);
             IncreaseScore(); // Increment the score
             Debug.Log("Score: " + score);
-            scoreText.text = "Current Score: " + score.ToString();
+            scoreText.text = "Coins Collected: " + score.ToString();
+            Coin.SetActive(false);
+            Coin2.SetActive(false);
         }
 
     }
